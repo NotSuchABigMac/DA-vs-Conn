@@ -102,8 +102,7 @@
   <div class="wrap">
     <h1>Cost Comparator: DotApparel vs AP21 Connect</h1>
     <p class="sub">
-      Slide counts and tick options to see one-time implementation and subscription totals update live.
-      This version compares <strong>6 month total cost</strong> (implementation + 6 months of subscription).
+      Live comparison of <strong>6 month total cost</strong> (implementation + 6 months of subscription).
     </p>
 
     <div class="topbar">
@@ -114,7 +113,7 @@
 
       <label class="pill">
         <input id="ap21RequireAllShopifyNow" type="checkbox" checked />
-        <span>AP21: Additional Shopify stores implemented at the same time as the first store</span>
+        <span>AP21: Extra Shopify stores implemented upfront</span>
       </label>
 
       <button id="resetBtn" type="button">Reset</button>
@@ -126,8 +125,8 @@
 
         <div class="row">
           <div>
-            <div class="label">Shopify stores to integrate</div>
-            <div class="muted">Count of Shopify storefront integrations you plan to pay for.</div>
+            <div class="label">Shopify stores</div>
+            <div class="muted">Count of Shopify storefronts.</div>
           </div>
           <div class="val"><span id="shopifyCountVal" class="mono">1</span></div>
         </div>
@@ -135,22 +134,39 @@
 
         <div class="row">
           <div>
-            <div class="label">Marketplaces to integrate</div>
-            <div class="muted">Example: David Jones Drop Ship (count per connection you will pay for).</div>
+            <div class="label">David Jones</div>
+            <div class="muted">Marketplace connections.</div>
           </div>
-          <div class="val"><span id="marketCountVal" class="mono">0</span></div>
+          <div class="val"><span id="djCountVal" class="mono">0</span></div>
         </div>
-        <input id="marketCount" type="range" min="0" max="10" step="1" value="0" />
+        <input id="djCount" type="range" min="0" max="10" step="1" value="0" />
+
+        <div class="row">
+          <div>
+            <div class="label">The Iconic</div>
+            <div class="muted">Marketplace connections.</div>
+          </div>
+          <div class="val"><span id="iconicCountVal" class="mono">0</span></div>
+        </div>
+        <input id="iconicCount" type="range" min="0" max="10" step="1" value="0" />
+
+        <div class="row">
+          <div>
+            <div class="label">Myer</div>
+            <div class="muted">Marketplace connections.</div>
+          </div>
+          <div class="val"><span id="myerCountVal" class="mono">0</span></div>
+        </div>
+        <input id="myerCount" type="range" min="0" max="10" step="1" value="0" />
 
         <div id="warnings" class="note warn" style="display:none;"></div>
 
         <div class="note">
-          <div><strong>Assumptions used</strong></div>
+          <div><strong>Logic used</strong></div>
           <ul style="margin:8px 0 0 18px; padding:0;">
-            <li>DotApparel Core applies when Shopify stores &gt; 0.</li>
-            <li>DotApparel Markets applies when marketplaces &gt; 0.</li>
-            <li>AP21 base subscription applies when any integration exists.</li>
-            <li>AP21 Shopify Lite and Marketplace monthly fees are per integration count.</li>
+            <li><strong>AP21 Markets:</strong> Scales with quantity (Cost per store).</li>
+            <li><strong>DotApparel Markets:</strong> Flat fee (One cost covers all marketplaces).</li>
+            <li><strong>Shopify:</strong> Both scale with quantity (First store vs Extra stores).</li>
           </ul>
         </div>
       </div>
@@ -184,7 +200,7 @@
             <div class="n mono" id="ap21Total6">$0</div>
           </div>
           <div class="kpi">
-            <div class="t">Difference (AP21 - DotApparel) over 6 months</div>
+            <div class="t">Difference (AP21 - DotApparel)</div>
             <div class="n mono" id="diff6">$0</div>
           </div>
           <div class="kpi">
@@ -195,7 +211,7 @@
 
         <div class="note good" style="margin-top:12px;">
           <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-            <div><strong>Monthly view (for reference)</strong></div>
+            <div><strong>Monthly view</strong></div>
           </div>
           <table class="table" aria-label="Monthly comparison">
             <thead>
@@ -218,7 +234,7 @@
         </div>
 
         <div class="note">
-          <div><strong>Rate card used in this calculator</strong></div>
+          <div><strong>Rate card</strong></div>
           <table class="table" aria-label="Rate card">
             <thead>
               <tr>
@@ -234,19 +250,14 @@
                 <td class="right mono">$10,080</td>
               </tr>
               <tr>
-                <td>Implementation - each extra Shopify</td>
+                <td>Implementation - extra Shopify</td>
                 <td class="right mono">$6,000</td>
                 <td class="right mono">$6,300</td>
               </tr>
               <tr>
-                <td>Implementation - first marketplace</td>
-                <td class="right mono">$3,000</td>
-                <td class="right mono">$12,600</td>
-              </tr>
-              <tr>
-                <td>Implementation - each extra marketplace</td>
-                <td class="right mono">$1,000</td>
-                <td class="right mono">$10,080</td>
+                <td>Implementation - Marketplaces</td>
+                <td class="right mono">$3,000 (Flat)</td>
+                <td class="right mono">$12,600 (1st)<br>$10,080 (Extra)</td>
               </tr>
               <tr>
                 <td>Monthly - base</td>
@@ -254,14 +265,14 @@
                 <td class="right mono">$825</td>
               </tr>
               <tr>
-                <td>Monthly - each Shopify integration</td>
-                <td class="right mono">$430.80 (extra store)</td>
+                <td>Monthly - extra Shopify</td>
+                <td class="right mono">$430.80</td>
                 <td class="right mono">$525</td>
               </tr>
               <tr>
-                <td>Monthly - each marketplace integration</td>
-                <td class="right mono">$360 first, $240 extra</td>
-                <td class="right mono">$450</td>
+                <td>Monthly - Marketplaces</td>
+                <td class="right mono">$360 (Flat)</td>
+                <td class="right mono">$450 (Per)</td>
               </tr>
             </tbody>
           </table>
@@ -298,10 +309,6 @@
         </div>
       </div>
     </div>
-
-    <p class="sub" style="margin-top:14px;">
-      Want it closer to reality? Tell me whether your count should be "brands" (Jockey, Mitch Dowd, Russell) or "stores", and whether each marketplace is per brand or per marketplace.
-    </p>
   </div>
 
   <script>
@@ -313,14 +320,11 @@
       dot: {
         implCoreFirstShopify: 10000,
         implCoreExtraShopify: 6000,
-        implMarketsFirst: 3000,
-        implMarketsExtra: 1000,
+        implMarketsFlat: 3000, // Flat fee regardless of count
 
         monthlyCoreBaseFirstShopify: 718.80,
         monthlyCoreExtraShopify: 430.80,
-
-        monthlyMarketsFirst: 360,
-        monthlyMarketsExtra: 240,
+        monthlyMarketsFlat: 360, // Flat fee regardless of count
       },
 
       ap21: {
@@ -338,14 +342,18 @@
 
     const els = {
       shopifyCount: document.getElementById("shopifyCount"),
-      marketCount: document.getElementById("marketCount"),
+      djCount: document.getElementById("djCount"),
+      iconicCount: document.getElementById("iconicCount"),
+      myerCount: document.getElementById("myerCount"),
+      
       shopifyCountVal: document.getElementById("shopifyCountVal"),
-      marketCountVal: document.getElementById("marketCountVal"),
+      djCountVal: document.getElementById("djCountVal"),
+      iconicCountVal: document.getElementById("iconicCountVal"),
+      myerCountVal: document.getElementById("myerCountVal"),
 
       includeGst: document.getElementById("includeGst"),
       ap21RequireAllShopifyNow: document.getElementById("ap21RequireAllShopifyNow"),
       resetBtn: document.getElementById("resetBtn"),
-
       warnings: document.getElementById("warnings"),
 
       dotImpl: document.getElementById("dotImpl"),
@@ -398,18 +406,23 @@
 
     function calculate() {
       const shopify = parseInt(els.shopifyCount.value, 10);
-      const markets = parseInt(els.marketCount.value, 10);
+      const dj = parseInt(els.djCount.value, 10);
+      const iconic = parseInt(els.iconicCount.value, 10);
+      const myer = parseInt(els.myerCount.value, 10);
+      const markets = dj + iconic + myer;
+      
       const includeGst = els.includeGst.checked;
 
       els.shopifyCountVal.textContent = String(shopify);
-      els.marketCountVal.textContent = String(markets);
+      els.djCountVal.textContent = String(dj);
+      els.iconicCountVal.textContent = String(iconic);
+      els.myerCountVal.textContent = String(myer);
 
       const anyIntegration = (shopify + markets) > 0;
 
       let warnMsgs = [];
-
       if (shopify > 1 && !els.ap21RequireAllShopifyNow.checked) {
-        warnMsgs.push("AP21 note: The quote states the $6,300 extra Shopify implementations must be delivered at the same time as the initial $10,080. You have turned that rule off, so treat these numbers as a scenario only.");
+        warnMsgs.push("AP21 note: You have disabled concurrent rollout. Treat extra implementation costs as theoretical.");
       }
       if (!anyIntegration) {
         warnMsgs.push("No integrations selected. Totals will be $0.");
@@ -424,73 +437,60 @@
 
       clearBreakdowns();
 
-      // DotApparel
+      // --- DotApparel (Flat Market Logic) ---
       let dotImpl = 0;
       let dotMonthly = 0;
 
       if (shopify > 0) {
         dotImpl += PRICES.dot.implCoreFirstShopify;
-        addRow(els.dotBreakdown, `Implementation - Core (first Shopify store)`, applyGst(PRICES.dot.implCoreFirstShopify, includeGst));
+        addRow(els.dotBreakdown, `Implementation - Core (1st Shopify)`, applyGst(PRICES.dot.implCoreFirstShopify, includeGst));
         if (shopify > 1) {
           const extra = (shopify - 1) * PRICES.dot.implCoreExtraShopify;
           dotImpl += extra;
-          addRow(els.dotBreakdown, `Implementation - Core (additional Shopify stores x${shopify - 1})`, applyGst(extra, includeGst));
+          addRow(els.dotBreakdown, `Implementation - Core (Extra Shopify x${shopify - 1})`, applyGst(extra, includeGst));
         }
 
         dotMonthly += PRICES.dot.monthlyCoreBaseFirstShopify;
-        addRow(els.dotBreakdown, `Monthly - Core (first Shopify store)`, applyGst(PRICES.dot.monthlyCoreBaseFirstShopify, includeGst));
+        addRow(els.dotBreakdown, `Monthly - Core (1st Shopify)`, applyGst(PRICES.dot.monthlyCoreBaseFirstShopify, includeGst));
         if (shopify > 1) {
           const extraMonthly = (shopify - 1) * PRICES.dot.monthlyCoreExtraShopify;
           dotMonthly += extraMonthly;
-          addRow(els.dotBreakdown, `Monthly - Core (additional Shopify stores x${shopify - 1})`, applyGst(extraMonthly, includeGst));
+          addRow(els.dotBreakdown, `Monthly - Core (Extra Shopify x${shopify - 1})`, applyGst(extraMonthly, includeGst));
         }
       }
 
       if (markets > 0) {
-        dotImpl += PRICES.dot.implMarketsFirst;
-        addRow(els.dotBreakdown, `Implementation - Markets (first marketplace)`, applyGst(PRICES.dot.implMarketsFirst, includeGst));
-        if (markets > 1) {
-          const extraM = (markets - 1) * PRICES.dot.implMarketsExtra;
-          dotImpl += extraM;
-          addRow(els.dotBreakdown, `Implementation - Markets (additional marketplaces x${markets - 1})`, applyGst(extraM, includeGst));
-        }
+        // FLAT FEE applied once if markets > 0
+        dotImpl += PRICES.dot.implMarketsFlat;
+        addRow(els.dotBreakdown, `Implementation - Markets (Flat fee for ${markets} active)`, applyGst(PRICES.dot.implMarketsFlat, includeGst));
 
-        dotMonthly += PRICES.dot.monthlyMarketsFirst;
-        addRow(els.dotBreakdown, `Monthly - Markets (first marketplace)`, applyGst(PRICES.dot.monthlyMarketsFirst, includeGst));
-        if (markets > 1) {
-          const extraMarketsMonthly = (markets - 1) * PRICES.dot.monthlyMarketsExtra;
-          dotMonthly += extraMarketsMonthly;
-          addRow(els.dotBreakdown, `Monthly - Markets (additional marketplaces x${markets - 1})`, applyGst(extraMarketsMonthly, includeGst));
-        }
+        dotMonthly += PRICES.dot.monthlyMarketsFlat;
+        addRow(els.dotBreakdown, `Monthly - Markets (Flat fee for ${markets} active)`, applyGst(PRICES.dot.monthlyMarketsFlat, includeGst));
       }
 
-      // AP21
+      // --- AP21 (Scaled Market Logic) ---
       let ap21Impl = 0;
       let ap21Monthly = 0;
 
       if (shopify > 0) {
         ap21Impl += PRICES.ap21.implFirstShopify;
-        addRow(els.ap21Breakdown, `Implementation - Shopify Lite (first Shopify store)`, applyGst(PRICES.ap21.implFirstShopify, includeGst));
+        addRow(els.ap21Breakdown, `Implementation - Shopify Lite (1st)`, applyGst(PRICES.ap21.implFirstShopify, includeGst));
         if (shopify > 1) {
           const extra = (shopify - 1) * PRICES.ap21.implExtraShopify;
           ap21Impl += extra;
-          addRow(els.ap21Breakdown, `Implementation - Shopify Lite (additional Shopify stores x${shopify - 1})`, applyGst(extra, includeGst));
-
-          if (els.ap21RequireAllShopifyNow.checked) {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `<td class="small">Note</td><td class="right small">Extra Shopify impl is assumed concurrent with the first store.</td>`;
-            els.ap21Breakdown.appendChild(tr);
-          }
+          addRow(els.ap21Breakdown, `Implementation - Shopify Lite (Extra x${shopify - 1})`, applyGst(extra, includeGst));
         }
       }
 
       if (markets > 0) {
+        // SCALED FEE: First market expensive, subsequent markets slightly cheaper
         ap21Impl += PRICES.ap21.implFirstMarketplace;
-        addRow(els.ap21Breakdown, `Implementation - Marketplace (first marketplace)`, applyGst(PRICES.ap21.implFirstMarketplace, includeGst));
+        addRow(els.ap21Breakdown, `Implementation - Markets (1st of ${markets})`, applyGst(PRICES.ap21.implFirstMarketplace, includeGst));
+        
         if (markets > 1) {
           const extraM = (markets - 1) * PRICES.ap21.implExtraMarketplace;
           ap21Impl += extraM;
-          addRow(els.ap21Breakdown, `Implementation - Marketplace (additional marketplaces x${markets - 1})`, applyGst(extraM, includeGst));
+          addRow(els.ap21Breakdown, `Implementation - Markets (Extra x${markets - 1})`, applyGst(extraM, includeGst));
         }
       }
 
@@ -501,12 +501,12 @@
       if (shopify > 0) {
         const m = shopify * PRICES.ap21.monthlyPerShopify;
         ap21Monthly += m;
-        addRow(els.ap21Breakdown, `Monthly - Shopify Lite (per Shopify integration x${shopify})`, applyGst(m, includeGst));
+        addRow(els.ap21Breakdown, `Monthly - Shopify Lite (x${shopify})`, applyGst(m, includeGst));
       }
       if (markets > 0) {
         const m = markets * PRICES.ap21.monthlyPerMarketplace;
         ap21Monthly += m;
-        addRow(els.ap21Breakdown, `Monthly - Marketplace (per marketplace integration x${markets})`, applyGst(m, includeGst));
+        addRow(els.ap21Breakdown, `Monthly - Marketplace (x${markets})`, applyGst(m, includeGst));
       }
 
       // Display totals (GST applied)
@@ -553,7 +553,9 @@
 
     function reset() {
       els.shopifyCount.value = 1;
-      els.marketCount.value = 0;
+      els.djCount.value = 0;
+      els.iconicCount.value = 0;
+      els.myerCount.value = 0;
       els.includeGst.checked = true;
       els.ap21RequireAllShopifyNow.checked = true;
       calculate();
@@ -561,7 +563,9 @@
 
     ["input", "change"].forEach(evt => {
       els.shopifyCount.addEventListener(evt, calculate);
-      els.marketCount.addEventListener(evt, calculate);
+      els.djCount.addEventListener(evt, calculate);
+      els.iconicCount.addEventListener(evt, calculate);
+      els.myerCount.addEventListener(evt, calculate);
       els.includeGst.addEventListener(evt, calculate);
       els.ap21RequireAllShopifyNow.addEventListener(evt, calculate);
     });
