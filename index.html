@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DotApparel vs AP21 Connect Cost Comparator</title>
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #121420;
+      --muted: #9aa3b2;
+      --text: #e9edf5;
+      --border: #20253a;
+      --good: #38bdf8;
+      --warn: #fbbf24;
+      --bad: #fb7185;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 20% 0%, #121a33, var(--bg));
+      color: var(--text);
+    }
+    .wrap { max-width: 1100px; margin: 28px auto; padding: 0 16px 40px; }
+    h1 { font-size: 20px; margin: 0 0 10px; }
+    .sub { color: var(--muted); margin: 0 0 18px; font-size: 13px; }
+    .grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 14px; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    }
+    .row { display: grid; grid-template-columns: 1fr 120px; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.06); }
+    .row:first-child { border-top: 0; padding-top: 0; }
+    .label { font-size: 13px; }
+    .muted { color: var(--muted); font-size: 12px; margin-top: 4px; line-height: 1.35; }
+    .val { text-align: right; font-variant-numeric: tabular-nums; font-size: 13px; color: var(--text); }
+    input[type="range"] { width: 100%; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 10px; border: 1px solid var(--border); border-radius: 999px;
+      background: rgba(0,0,0,0.2);
+      user-select: none;
+    }
+    .pill input { transform: translateY(1px); }
+    .topbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0 16px; }
+    .kpiGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 600px) { .kpiGrid { grid-template-columns: 1fr; } }
+    .kpi {
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .kpi .t { color: var(--muted); font-size: 12px; }
+    .kpi .n { font-size: 18px; margin-top: 6px; font-variant-numeric: tabular-nums; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+    .table th, .table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      vertical-align: top;
+    }
+    .table th { text-align: left; color: var(--muted); font-weight: 600; }
+    .right { text-align: right; font-variant-numeric: tabular-nums; }
+    .note {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.22);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .warn { border-color: rgba(251,191,36,0.35); color: #ffd48a; }
+    .good { border-color: rgba(56,189,248,0.35); color: #bfe9ff; }
+    .small { font-size: 12px; color: var(--muted); }
+    button {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
+    button:hover { background: rgba(255,255,255,0.09); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Cost Comparator: DotApparel vs AP21 Connect</h1>
+    <p class="sub">
+      Slide counts and tick options to see one-time implementation and subscription totals update live.
+      This version compares <strong>6 month total cost</strong> (implementation + 6 months of subscription).
+    </p>
+
+    <div class="topbar">
+      <label class="pill">
+        <input id="includeGst" type="checkbox" checked />
+        <span>Include GST (10%)</span>
+      </label>
+
+      <label class="pill">
+        <input id="ap21RequireAllShopifyNow" type="checkbox" checked />
+        <span>AP21: Additional Shopify stores implemented at the same time as the first store</span>
+      </label>
+
+      <button id="resetBtn" type="button">Reset</button>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2 style="margin:0 0 10px; font-size:16px;">Inputs</h2>
+
+        <div class="row">
+          <div>
+            <div class="label">Shopify stores to integrate</div>
+            <div class="muted">Count of Shopify storefront integrations you plan to pay for.</div>
+          </div>
+          <div class="val"><span id="shopifyCountVal" class="mono">1</span></div>
+        </div>
+        <input id="shopifyCount" type="range" min="0" max="10" step="1" value="1" />
+
+        <div class="row">
+          <div>
+            <div class="label">Marketplaces to integrate</div>
+            <div class="muted">Example: David Jones Drop Ship (count per connection you will pay for).</div>
+          </div>
+          <div class="val"><span id="marketCountVal" class="mono">0</span></div>
+        </div>
+        <input id="marketCount" type="range" min="0" max="10" step="1" value="0" />
+
+        <div id="warnings" class="note warn" style="display:none;"></div>
+
+        <div class="note">
+          <div><strong>Assumptions used</strong></div>
+          <ul style="margin:8px 0 0 18px; padding:0;">
+            <li>DotApparel Core applies when Shopify stores &gt; 0.</li>
+            <li>DotApparel Markets applies when marketplaces &gt; 0.</li>
+            <li>AP21 base subscription applies when any integration exists.</li>
+            <li>AP21 Shopify Lite and Marketplace monthly fees are per integration count.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin:0 0 10px; font-size:16px;">6 month totals</h2>
+
+        <div class="kpiGrid">
+          <div class="kpi">
+            <div class="t">DotApparel - Implementation</div>
+            <div class="n mono" id="dotImpl">$0</div>
+          </div>
+          <div class="kpi">
+            <div class="t">AP21 - Implementation</div>
+            <div class="n mono" id="ap21Impl">$0</div>
+          </div>
+          <div class="kpi">
+            <div class="t">DotApparel - Subscription (6 months)</div>
+            <div class="n mono" id="dotSub6">$0</div>
+          </div>
+          <div class="kpi">
+            <div class="t">AP21 - Subscription (6 months)</div>
+            <div class="n mono" id="ap21Sub6">$0</div>
+          </div>
+          <div class="kpi">
+            <div class="t">DotApparel - Total (6 months)</div>
+            <div class="n mono" id="dotTotal6">$0</div>
+          </div>
+          <div class="kpi">
+            <div class="t">AP21 - Total (6 months)</div>
+            <div class="n mono" id="ap21Total6">$0</div>
+          </div>
+          <div class="kpi">
+            <div class="t">Difference (AP21 - DotApparel) over 6 months</div>
+            <div class="n mono" id="diff6">$0</div>
+          </div>
+          <div class="kpi">
+            <div class="t">Cheaper option (6 months)</div>
+            <div class="n mono" id="cheaper6">$0</div>
+          </div>
+        </div>
+
+        <div class="note good" style="margin-top:12px;">
+          <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+            <div><strong>Monthly view (for reference)</strong></div>
+          </div>
+          <table class="table" aria-label="Monthly comparison">
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th class="right">Monthly</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>DotApparel</td>
+                <td class="right mono" id="dotMonthly">$0</td>
+              </tr>
+              <tr>
+                <td>AP21</td>
+                <td class="right mono" id="ap21Monthly">$0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note">
+          <div><strong>Rate card used in this calculator</strong></div>
+          <table class="table" aria-label="Rate card">
+            <thead>
+              <tr>
+                <th></th>
+                <th class="right">DotApparel</th>
+                <th class="right">AP21</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Implementation - first Shopify</td>
+                <td class="right mono">$10,000</td>
+                <td class="right mono">$10,080</td>
+              </tr>
+              <tr>
+                <td>Implementation - each extra Shopify</td>
+                <td class="right mono">$6,000</td>
+                <td class="right mono">$6,300</td>
+              </tr>
+              <tr>
+                <td>Implementation - first marketplace</td>
+                <td class="right mono">$3,000</td>
+                <td class="right mono">$12,600</td>
+              </tr>
+              <tr>
+                <td>Implementation - each extra marketplace</td>
+                <td class="right mono">$1,000</td>
+                <td class="right mono">$10,080</td>
+              </tr>
+              <tr>
+                <td>Monthly - base</td>
+                <td class="right mono">$718.80</td>
+                <td class="right mono">$825</td>
+              </tr>
+              <tr>
+                <td>Monthly - each Shopify integration</td>
+                <td class="right mono">$430.80 (extra store)</td>
+                <td class="right mono">$525</td>
+              </tr>
+              <tr>
+                <td>Monthly - each marketplace integration</td>
+                <td class="right mono">$360 first, $240 extra</td>
+                <td class="right mono">$450</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <h2 style="margin:0 0 10px; font-size:16px;">Breakdown (6 month totals)</h2>
+      <div class="split">
+        <div>
+          <h3 style="margin:0 0 6px; font-size:14px;">DotApparel</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Line item</th>
+                <th class="right">Cost</th>
+              </tr>
+            </thead>
+            <tbody id="dotBreakdown"></tbody>
+          </table>
+        </div>
+        <div>
+          <h3 style="margin:0 0 6px; font-size:14px;">AP21</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Line item</th>
+                <th class="right">Cost</th>
+              </tr>
+            </thead>
+            <tbody id="ap21Breakdown"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <p class="sub" style="margin-top:14px;">
+      Want it closer to reality? Tell me whether your count should be "brands" (Jockey, Mitch Dowd, Russell) or "stores", and whether each marketplace is per brand or per marketplace.
+    </p>
+  </div>
+
+  <script>
+    const MONTHS = 6;
+
+    const PRICES = {
+      gstRate: 0.10,
+
+      dot: {
+        implCoreFirstShopify: 10000,
+        implCoreExtraShopify: 6000,
+        implMarketsFirst: 3000,
+        implMarketsExtra: 1000,
+
+        monthlyCoreBaseFirstShopify: 718.80,
+        monthlyCoreExtraShopify: 430.80,
+
+        monthlyMarketsFirst: 360,
+        monthlyMarketsExtra: 240,
+      },
+
+      ap21: {
+        implFirstShopify: 10080,
+        implExtraShopify: 6300,
+
+        implFirstMarketplace: 12600,
+        implExtraMarketplace: 10080,
+
+        monthlyBase: 825,
+        monthlyPerShopify: 525,
+        monthlyPerMarketplace: 450
+      }
+    };
+
+    const els = {
+      shopifyCount: document.getElementById("shopifyCount"),
+      marketCount: document.getElementById("marketCount"),
+      shopifyCountVal: document.getElementById("shopifyCountVal"),
+      marketCountVal: document.getElementById("marketCountVal"),
+
+      includeGst: document.getElementById("includeGst"),
+      ap21RequireAllShopifyNow: document.getElementById("ap21RequireAllShopifyNow"),
+      resetBtn: document.getElementById("resetBtn"),
+
+      warnings: document.getElementById("warnings"),
+
+      dotImpl: document.getElementById("dotImpl"),
+      ap21Impl: document.getElementById("ap21Impl"),
+      dotMonthly: document.getElementById("dotMonthly"),
+      ap21Monthly: document.getElementById("ap21Monthly"),
+
+      dotSub6: document.getElementById("dotSub6"),
+      ap21Sub6: document.getElementById("ap21Sub6"),
+      dotTotal6: document.getElementById("dotTotal6"),
+      ap21Total6: document.getElementById("ap21Total6"),
+      diff6: document.getElementById("diff6"),
+      cheaper6: document.getElementById("cheaper6"),
+
+      dotBreakdown: document.getElementById("dotBreakdown"),
+      ap21Breakdown: document.getElementById("ap21Breakdown"),
+    };
+
+    function money(n) {
+      const hasCents = Math.abs(n - Math.round(n)) > 0.00001;
+      return n.toLocaleString(undefined, {
+        style: "currency",
+        currency: "AUD",
+        minimumFractionDigits: hasCents ? 2 : 0,
+        maximumFractionDigits: hasCents ? 2 : 0
+      });
+    }
+
+    function applyGst(value, include) {
+      if (!include) return value;
+      return value * (1 + PRICES.gstRate);
+    }
+
+    function addRow(tbody, label, value) {
+      const tr = document.createElement("tr");
+      const td1 = document.createElement("td");
+      const td2 = document.createElement("td");
+      td1.textContent = label;
+      td2.className = "right mono";
+      td2.textContent = money(value);
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tbody.appendChild(tr);
+    }
+
+    function clearBreakdowns() {
+      els.dotBreakdown.innerHTML = "";
+      els.ap21Breakdown.innerHTML = "";
+    }
+
+    function calculate() {
+      const shopify = parseInt(els.shopifyCount.value, 10);
+      const markets = parseInt(els.marketCount.value, 10);
+      const includeGst = els.includeGst.checked;
+
+      els.shopifyCountVal.textContent = String(shopify);
+      els.marketCountVal.textContent = String(markets);
+
+      const anyIntegration = (shopify + markets) > 0;
+
+      let warnMsgs = [];
+
+      if (shopify > 1 && !els.ap21RequireAllShopifyNow.checked) {
+        warnMsgs.push("AP21 note: The quote states the $6,300 extra Shopify implementations must be delivered at the same time as the initial $10,080. You have turned that rule off, so treat these numbers as a scenario only.");
+      }
+      if (!anyIntegration) {
+        warnMsgs.push("No integrations selected. Totals will be $0.");
+      }
+
+      if (warnMsgs.length) {
+        els.warnings.style.display = "block";
+        els.warnings.innerHTML = warnMsgs.map(m => `<div>• ${m}</div>`).join("");
+      } else {
+        els.warnings.style.display = "none";
+      }
+
+      clearBreakdowns();
+
+      // DotApparel
+      let dotImpl = 0;
+      let dotMonthly = 0;
+
+      if (shopify > 0) {
+        dotImpl += PRICES.dot.implCoreFirstShopify;
+        addRow(els.dotBreakdown, `Implementation - Core (first Shopify store)`, applyGst(PRICES.dot.implCoreFirstShopify, includeGst));
+        if (shopify > 1) {
+          const extra = (shopify - 1) * PRICES.dot.implCoreExtraShopify;
+          dotImpl += extra;
+          addRow(els.dotBreakdown, `Implementation - Core (additional Shopify stores x${shopify - 1})`, applyGst(extra, includeGst));
+        }
+
+        dotMonthly += PRICES.dot.monthlyCoreBaseFirstShopify;
+        addRow(els.dotBreakdown, `Monthly - Core (first Shopify store)`, applyGst(PRICES.dot.monthlyCoreBaseFirstShopify, includeGst));
+        if (shopify > 1) {
+          const extraMonthly = (shopify - 1) * PRICES.dot.monthlyCoreExtraShopify;
+          dotMonthly += extraMonthly;
+          addRow(els.dotBreakdown, `Monthly - Core (additional Shopify stores x${shopify - 1})`, applyGst(extraMonthly, includeGst));
+        }
+      }
+
+      if (markets > 0) {
+        dotImpl += PRICES.dot.implMarketsFirst;
+        addRow(els.dotBreakdown, `Implementation - Markets (first marketplace)`, applyGst(PRICES.dot.implMarketsFirst, includeGst));
+        if (markets > 1) {
+          const extraM = (markets - 1) * PRICES.dot.implMarketsExtra;
+          dotImpl += extraM;
+          addRow(els.dotBreakdown, `Implementation - Markets (additional marketplaces x${markets - 1})`, applyGst(extraM, includeGst));
+        }
+
+        dotMonthly += PRICES.dot.monthlyMarketsFirst;
+        addRow(els.dotBreakdown, `Monthly - Markets (first marketplace)`, applyGst(PRICES.dot.monthlyMarketsFirst, includeGst));
+        if (markets > 1) {
+          const extraMarketsMonthly = (markets - 1) * PRICES.dot.monthlyMarketsExtra;
+          dotMonthly += extraMarketsMonthly;
+          addRow(els.dotBreakdown, `Monthly - Markets (additional marketplaces x${markets - 1})`, applyGst(extraMarketsMonthly, includeGst));
+        }
+      }
+
+      // AP21
+      let ap21Impl = 0;
+      let ap21Monthly = 0;
+
+      if (shopify > 0) {
+        ap21Impl += PRICES.ap21.implFirstShopify;
+        addRow(els.ap21Breakdown, `Implementation - Shopify Lite (first Shopify store)`, applyGst(PRICES.ap21.implFirstShopify, includeGst));
+        if (shopify > 1) {
+          const extra = (shopify - 1) * PRICES.ap21.implExtraShopify;
+          ap21Impl += extra;
+          addRow(els.ap21Breakdown, `Implementation - Shopify Lite (additional Shopify stores x${shopify - 1})`, applyGst(extra, includeGst));
+
+          if (els.ap21RequireAllShopifyNow.checked) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td class="small">Note</td><td class="right small">Extra Shopify impl is assumed concurrent with the first store.</td>`;
+            els.ap21Breakdown.appendChild(tr);
+          }
+        }
+      }
+
+      if (markets > 0) {
+        ap21Impl += PRICES.ap21.implFirstMarketplace;
+        addRow(els.ap21Breakdown, `Implementation - Marketplace (first marketplace)`, applyGst(PRICES.ap21.implFirstMarketplace, includeGst));
+        if (markets > 1) {
+          const extraM = (markets - 1) * PRICES.ap21.implExtraMarketplace;
+          ap21Impl += extraM;
+          addRow(els.ap21Breakdown, `Implementation - Marketplace (additional marketplaces x${markets - 1})`, applyGst(extraM, includeGst));
+        }
+      }
+
+      if (anyIntegration) {
+        ap21Monthly += PRICES.ap21.monthlyBase;
+        addRow(els.ap21Breakdown, `Monthly - Base subscription`, applyGst(PRICES.ap21.monthlyBase, includeGst));
+      }
+      if (shopify > 0) {
+        const m = shopify * PRICES.ap21.monthlyPerShopify;
+        ap21Monthly += m;
+        addRow(els.ap21Breakdown, `Monthly - Shopify Lite (per Shopify integration x${shopify})`, applyGst(m, includeGst));
+      }
+      if (markets > 0) {
+        const m = markets * PRICES.ap21.monthlyPerMarketplace;
+        ap21Monthly += m;
+        addRow(els.ap21Breakdown, `Monthly - Marketplace (per marketplace integration x${markets})`, applyGst(m, includeGst));
+      }
+
+      // Display totals (GST applied)
+      const dotImplD = applyGst(dotImpl, includeGst);
+      const ap21ImplD = applyGst(ap21Impl, includeGst);
+      const dotMonthlyD = applyGst(dotMonthly, includeGst);
+      const ap21MonthlyD = applyGst(ap21Monthly, includeGst);
+
+      const dotSub6 = dotMonthlyD * MONTHS;
+      const ap21Sub6 = ap21MonthlyD * MONTHS;
+
+      const dotTotal6 = dotImplD + dotSub6;
+      const ap21Total6 = ap21ImplD + ap21Sub6;
+
+      const diff6 = ap21Total6 - dotTotal6;
+
+      els.dotImpl.textContent = money(dotImplD);
+      els.ap21Impl.textContent = money(ap21ImplD);
+      els.dotMonthly.textContent = money(dotMonthlyD);
+      els.ap21Monthly.textContent = money(ap21MonthlyD);
+
+      els.dotSub6.textContent = money(dotSub6);
+      els.ap21Sub6.textContent = money(ap21Sub6);
+
+      els.dotTotal6.textContent = money(dotTotal6);
+      els.ap21Total6.textContent = money(ap21Total6);
+
+      const sign = diff6 >= 0 ? "+" : "-";
+      els.diff6.textContent = `${sign}${money(Math.abs(diff6))}`;
+
+      const cheaper = dotTotal6 <= ap21Total6 ? "DotApparel" : "AP21";
+      const cheaperVal = Math.min(dotTotal6, ap21Total6);
+      els.cheaper6.textContent = `${cheaper} (${money(cheaperVal)})`;
+
+      // Add 6-month total rows to breakdowns
+      const dotTotalTr = document.createElement("tr");
+      dotTotalTr.innerHTML = `<td><strong>Total (6 months)</strong></td><td class="right mono"><strong>${money(dotTotal6)}</strong></td>`;
+      els.dotBreakdown.appendChild(dotTotalTr);
+
+      const ap21TotalTr = document.createElement("tr");
+      ap21TotalTr.innerHTML = `<td><strong>Total (6 months)</strong></td><td class="right mono"><strong>${money(ap21Total6)}</strong></td>`;
+      els.ap21Breakdown.appendChild(ap21TotalTr);
+    }
+
+    function reset() {
+      els.shopifyCount.value = 1;
+      els.marketCount.value = 0;
+      els.includeGst.checked = true;
+      els.ap21RequireAllShopifyNow.checked = true;
+      calculate();
+    }
+
+    ["input", "change"].forEach(evt => {
+      els.shopifyCount.addEventListener(evt, calculate);
+      els.marketCount.addEventListener(evt, calculate);
+      els.includeGst.addEventListener(evt, calculate);
+      els.ap21RequireAllShopifyNow.addEventListener(evt, calculate);
+    });
+    els.resetBtn.addEventListener("click", reset);
+
+    calculate();
+  </script>
+</body>
+</html>
